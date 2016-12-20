@@ -1,17 +1,10 @@
 import React from 'react';
+import Login from '../containers/Login';
 
-class Main extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div>
-        main
-      </div>
-    );
-  }
-}
+const Main = () => (
+  <div className="jumbotron">
+    <Login />
+  </div>
+);
 
 export default Main;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import * as authActions from '../modules/auth/authActions';
 
@@ -10,7 +11,6 @@ class AppNavigation extends React.Component {
   }
   logoff(e) {
     e.preventDefault();
-    console.log(this.props)
     this.props.logout();
   }
   render() {
@@ -19,7 +19,7 @@ class AppNavigation extends React.Component {
         <div className="container-fluid">
           <div className="collapse navbar-collapse">
             <ul className="nav navbar-nav navbar-right">
-              <li><button href="/" onClick={this.logoff}>Logout</button></li>
+              <li><Link to="/" onClick={this.logoff}>Logout</Link></li>
             </ul>
           </div>
         </div>

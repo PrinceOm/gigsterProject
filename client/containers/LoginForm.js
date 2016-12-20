@@ -1,6 +1,6 @@
 import React from 'react';
 
-class SignupForm extends React.Component {
+class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +29,7 @@ class SignupForm extends React.Component {
     return (
       <form onSubmit={this.onSubmit}>
 
-        <h1>Login now!</h1>
+        <h1>Login</h1>
 
         <div className="form-group">
           <label className="control-label" htmlFor="username">Username</label>
@@ -56,7 +56,7 @@ class SignupForm extends React.Component {
         </div>
         <div className="form-group">
           <button className="btn btn-primary btn-lg">
-            Sign up
+            Login
           </button>
         </div>
 
@@ -65,4 +65,8 @@ class SignupForm extends React.Component {
   }
 }
 
-export default SignupForm;
+LoginForm.propTypes = {
+  signIn: React.PropTypes.func.isRequired,
+};
+
+export default LoginForm;
