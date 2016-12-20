@@ -3,6 +3,9 @@ import * as types from './constants';
 const initialState = {
   message: null,
   token: null,
+  _id: null,
+  username: null,
+  accountType: null,
 };
 
 export default function (state = initialState, action) {
@@ -10,20 +13,21 @@ export default function (state = initialState, action) {
     case types.AUTH_SUCCESS:
       return {
         ...state,
-        message: null,
-        token: action.token,
+        ...action.response,
       };
     case types.AUTH_FAILURE:
       return {
         ...state,
         message: action.message,
-        token: null,
       };
-    case types.LOG_OUT:
+    case types.LOG_OFF:
       return {
         ...state,
-        message: action.message,
+        message: null,
         token: null,
+        _id: null,
+        username: null,
+        accountType: null,
       };
     default:
       return state;

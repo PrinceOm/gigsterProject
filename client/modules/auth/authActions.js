@@ -2,6 +2,8 @@ import isEmpty from 'lodash/isEmpty';
 import Validator from 'validator';
 import { replace } from 'react-router-redux';
 import { types } from './';
+import { setUser } from '../user/userActions';
+import { getAllExpenses } from '../expense/expenseActions';
 
 export function validateInput(data) {
   const errors = {};
@@ -11,14 +13,16 @@ export function validateInput(data) {
   if (Validator.isEmpty(data.password)) {
     errors.password = 'This field is required';
   }
-  if (Validator.isEmpty(data.passwordConfirmation)) {
-    errors.passwordConfirmation = 'This field is required';
-  }
-  if (!Validator.equals(data.passwordConfirmation, data.password)) {
-    errors.passwordConfirmation = 'Passwords do not match';
-  }
-  if (Validator.isEmpty(data.accountType)) {
-    errors.accountType = 'Please pick account type';
+  if (data.request !== 'current') {
+    if (Validator.isEmpty(data.passwordConfirmation)) {
+      errors.passwordConfirmation = 'This field is required';
+    }
+    if (!Validator.equals(data.passwordConfirmation, data.password)) {
+      errors.passwordConfirmation = 'Passwords do not match';
+    }
+    if (Validator.isEmpty(data.accountType)) {
+      errors.accountType = 'Please pick account type';
+    }
   }
   return {
     errors,
@@ -26,28 +30,30 @@ export function validateInput(data) {
   };
 }
 
-export function authSuccess(token) {
-  console.log(token)
+export function authSuccess(response) {
   return {
     type: types.AUTH_SUCCESS,
-    token,
+    response,
   };
 }
 
 export function authFailure(message) {
-  console.log(message)
   return {
     type: types.AUTH_FAILURE,
     message,
   };
 }
 
-export function logOut(message) {
-  return {
-    type: types.LOG_OUT,
-    message,
+export function logout() {
+  return (dispatch) => {
+    dispatch({
+      type: types.LOG_OFF,
+    });
+    dispatch(replace('/'));
   };
 }
+
+// eslint-disable-line no-undef
 
 const authRequestOptions = function authRequestOptions(userCredentials) {
   return {
@@ -61,30 +67,62 @@ const authRequestOptions = function authRequestOptions(userCredentials) {
 };
 
 const authPost = function authRequest(uri, credentials) {
-  return fetch(uri, authRequestOptions(credentials))
-    .then(response => response.json())
-    .catch(e => console.log(e));
+  return fetch(uri, authRequestOptions(credentials)) // eslint-disable-line no-undef
+    .then(response => response.json());
 };
 
-export function logout() {
+
+export function authCheck(token) {
   return (dispatch) => {
-    dispatch({
-      type: types.LOG_OUT,
+    fetch('http://localhost:9000/api/user/me', { // eslint-disable-line no-undef
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+    })
+    .then(response => response.json())
+    .then((response) => {
+      if (response.message) {
+        dispatch(authFailure(response.message));
+      } else {
+        response.token = token; // eslint-disable-line no-param-reassign
+        dispatch(getAllExpenses(response));
+        dispatch(authSuccess(response));
+        dispatch(setUser(response));
+        setTimeout(() => {
+          dispatch(replace('/app'));
+        }, 500);
+      }
+    })
+    .catch(() => {
+      dispatch(authFailure('Session expired'));
+      dispatch(replace('/login'));
     });
-    dispatch(replace('/login'));
   };
-};
+}
 
 const handleAuthSuccess = function handleAuthSuccess(dispatch) {
   return (response) => {
     dispatch(authSuccess(response.token));
-    // dispatch(getExpenses());
-    //call main page after login
+    dispatch(authCheck(response.token));
   };
 };
 
 export function signIn(credentials) {
-  return authPost('localhost:9000/auth/local', credentials);
+  return (dispatch) => {
+    const { isValid, errors } = validateInput(credentials);
+    if (!isValid) {
+      return Promise.resolve({ errors });
+    }
+    return authPost('http://localhost:9000/api/auth/local', credentials)
+      .then(handleAuthSuccess(dispatch))
+      .catch((e) => {
+        dispatch(authFailure(e));
+        dispatch(replace('/login'));
+      });
+  };
 }
 
 export function userSignupRequest(credentials) {
@@ -95,6 +133,9 @@ export function userSignupRequest(credentials) {
     }
     return authPost('http://localhost:9000/api/user/', credentials)
       .then(handleAuthSuccess(dispatch))
-      .catch(e => dispatch(authFailure(e)));
+      .catch((e) => {
+        dispatch(authFailure(e));
+        dispatch(replace('/signup'));
+      });
   };
 }
