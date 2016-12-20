@@ -1,0 +1,55 @@
+{
+  "name": "gigster-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrinceOm/gigsterProject.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PrinceOm/gigsterProject/issues"
+  },
+  "homepage": "https://github.com/PrinceOm/gigsterProject#readme",
+  "dependencies": {
+    "ajv-pack": "^0.2.7",
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
+    "babel-plugin-lodash": "^3.2.9",
+    "babel-plugin-transform-react-jsx-source": "^6.9.0",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-react-hmre": "^1.1.1",
+    "babel-preset-stage-0": "^6.16.0",
+    "bluebird": "^3.4.6",
+    "body-parser": "^1.15.2",
+    "compression": "^1.6.2",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "lodash": "^4.16.4",
+    "mongo": "^0.1.0",
+    "mongoose": "^4.6.6",
+    "morgan": "^1.7.0",
+    "winston": "^2.3.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.0",
+    "babel-register": "^6.9.0",
+    "eslint": "^3.9.1",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.6.0",
+    "nodemon": "^1.10.0"
+  },
+  "engines": {
+    "node": "6.3.1"
+  }
+}
