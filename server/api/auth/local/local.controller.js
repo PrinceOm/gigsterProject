@@ -1,29 +1,18 @@
-const LocalStrategy = require('passport-local');
 const passport = require('passport');
 
-const User = require('../../user/user.model');
+require('./passport');
 
-passport.use(new LocalStrategy({
-  usernameField: 'username',
-  passwordField: 'password',
-}, (username, password, done) => {
-  User.findOne({ username })
-    .select('+password')
-    .then((user) => {
-      if (!user) {
-        return done(null, false, {
-          message: 'No user with that name... Need to sign up?',
-        });
-      }
-      return user.authenticate(password)
-        .then((authenticated) => {
-          if (!authenticated) {
-            return done(null, false, {
-              message: 'Wrong password... Try again!',
-            });
-          }
-          return done(null, user);
-        });
-    })
-    .catch(err => done(err));
-}));
+const controller = {};
+
+controller.auth = function auth(req, res, next) {
+  passport.authenticate('local', (err, user, info) => {
+    const error = err || info;
+    if (error) {
+      return res.status(401).json(error);
+    }
+    req.user = user;  // eslint-disable-line no-param-reassign
+    return next();
+  })(req, res, next);
+};
+
+module.exports = controller;
