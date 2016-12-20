@@ -5,7 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --progress --colors",
+    "client": "webpack-dev-server --host 0.0.0.0 --hot --history-api-fallback",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "NODE_ENV=test mocha -r ./mocha.conf.js -R spec **/*.spec.js",
+    "test:integration": "NODE_ENV=test mocha -r ./mocha.conf.js -R spec **/*.integration.js",
+    "lint:client": "eslint client",
+    "lint:server": "eslint server",
+    "lint": "npm run lint:client & npm run lint:server"
   },
   "repository": {
     "type": "git",

@@ -25,7 +25,7 @@ export default function subscribe(store) {
   store.subscribe(throttle(() => {
     saveState({
       auth: store.getState().auth,
-      expenense: store.getState().auth,
+      expense: store.getState().expense,
     });
   }, 1000));
 }
