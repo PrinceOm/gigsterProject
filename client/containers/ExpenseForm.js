@@ -6,6 +6,7 @@ class ExpenseForm extends React.Component {
     super(props);
     this.state = {
       errors: {},
+      submitOn: true,
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -23,16 +24,19 @@ class ExpenseForm extends React.Component {
     e.preventDefault();
     // need to clear out state
     if (this.props.edit) {
+      this.setState({ submitOn: false });
       this.props.eActions.editExpense(sanitized);
       this.props.edit();
-    } else {
+    } else if (this.state.submitOn) {
       this.props.eActions.submitExpense(this.state)
         .then(t => t.errors ? this.setState({ errors: t.errors }) : null);
+    } else {
+      this.setState({ submitOn: true });
     }
   }
 
   onDelete() {
-    console.log(this.props.selected._id)
+    this.setState({ submitOn: false });
     this.props.eActions.removeExpense(this.props.selected._id);
     this.props.edit();
   }

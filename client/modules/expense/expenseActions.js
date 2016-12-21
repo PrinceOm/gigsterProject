@@ -98,6 +98,7 @@ export function decorateExpense(data) {
 }
 
 export function submitExpense(data) {
+  // console.log('data', data);
   return (dispatch) => {
     const { isValid, errors } = validateInput(data);
     if (!isValid) {
@@ -121,6 +122,7 @@ export function submitExpense(data) {
 }
 
 export function removeExpense(expenseId) {
+  // console.log('expenseId', expenseId);
   return (dispatch) => {
     const token = JSON.parse(localStorage.state).auth.token;
     const owner = JSON.parse(localStorage.state).auth._id;
