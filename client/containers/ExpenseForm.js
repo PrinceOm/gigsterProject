@@ -29,7 +29,11 @@ class ExpenseForm extends React.Component {
       this.props.edit();
     } else if (this.state.submitOn) {
       this.props.eActions.submitExpense(this.state)
-        .then(t => t.errors ? this.setState({ errors: t.errors }) : null);
+      .then((t) => {
+        if (t.errors) {
+          this.setState({ errors: t.errors });
+        }
+      });
     } else {
       this.setState({ submitOn: true });
     }
@@ -122,9 +126,9 @@ class ExpenseForm extends React.Component {
 }
 
 ExpenseForm.propTypes = {
-  eActions: React.PropTypes.func.isRequired,
-  edit: React.PropTypes,
-  selected: React.PropTypes,
+  eActions: React.PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  edit: React.PropTypes.any, // eslint-disable-line react/forbid-prop-types
+  selected: React.PropTypes.any, // eslint-disable-line react/forbid-prop-types
 };
 
 export default ExpenseForm;

@@ -33,7 +33,7 @@ class ExpensesComponent extends React.Component {
           type = 'list-group-item';
           editable = <button name={expense._id} onClick={this.props.fill}>edit</button>;
         }
-        return (<li className={type} >
+        return (<li key={expense._id} className={type} >
           <p>Amount: {expense.amount}</p>
           <p>Details: {expense.description}</p>
           <p>Date: {expense.date}</p>
@@ -46,13 +46,13 @@ class ExpensesComponent extends React.Component {
       });
     }
     if (this.state.loading) {
-      return (<div className="col-xs-8 list-group">
+      return (<div className="col-xs-4 list-group">
         LOADING
       </div>
       );
     }
     return (
-      <div className="col-xs-8 list-group">
+      <div className="col-xs-4 list-group">
         {display}
       </div>
     );
@@ -60,8 +60,8 @@ class ExpensesComponent extends React.Component {
 }
 
 ExpensesComponent.propTypes = {
-  expenseList: React.PropTypes,
-  fill: React.PropTypes.func.isRequired,
+  expenseList: React.PropTypes.any, // eslint-disable-line react/forbid-prop-types
+  fill: React.PropTypes.func,
 };
 
 export default ExpensesComponent;
