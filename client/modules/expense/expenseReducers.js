@@ -2,7 +2,9 @@ import * as types from './constants';
 
 const initialState = {
   expenses: [],
-  reportExpenses: [],
+  reportExpenses: [null],
+  end: '',
+  start: '',
 };
 
 export default function (state = initialState, action) {
@@ -29,6 +31,9 @@ export default function (state = initialState, action) {
     case types.EXPENSE_REPORT:
       return {
         ...state,
+        reportExpenses: action.response,
+        end: action.end,
+        start: action.start,
       };
     case types.EXPENSE_POPULATE:
       return {

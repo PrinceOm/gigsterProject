@@ -1,5 +1,7 @@
 import React from 'react';
-import { validateReport } from '../modules/expense/expenseActions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { calculateReport } from '../modules/expense/expenseActions';
 
 class GenerateReport extends React.Component {
   constructor(props) {
@@ -22,14 +24,12 @@ class GenerateReport extends React.Component {
   onSubmit(e) {
     this.setState({ errors: {} });
     e.preventDefault();
-
-    // this.props.toggleOption()(this.state)
-    validateReport(this.state)
+    calculateReport(this.props.expense.expenses, this.state)
       .then((t) => {
-        if (t.isValid) {
-          this.props.toggleOption(e);
-        } else {
+        if (t.errors) {
           this.setState({ errors: t.errors });
+        } else {
+          this.props.toggleOption(e);
         }
       });
   }
@@ -102,7 +102,16 @@ class GenerateReport extends React.Component {
 }
 
 GenerateReport.propTypes = {
-  toggleOption: React.PropTypes.func.isRequired,
+  toggleOption: React.PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
+  expense: React.PropTypes.any, // eslint-disable-line react/forbid-prop-types
 };
 
-export default GenerateReport;
+const mapStateToProps = state => ({
+  expense: state.expense,
+});
+
+const mapDispatchToProps = dispatch => ({
+  calculateReport: bindActionCreators(calculateReport, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(GenerateReport);

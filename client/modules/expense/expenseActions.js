@@ -1,6 +1,8 @@
 import isEmpty from 'lodash/isEmpty';
 import Validator from 'validator';
 import { types } from './';
+import store from '../../app';
+
 
 export function validateInput(data) {
   const errors = {};
@@ -25,6 +27,9 @@ export function validateInput(data) {
   if (Validator.isEmpty(data.date)) {
     errors.date = 'This field is required';
   }
+  if (Date.parse(data.date) < 0) {
+    errors.date = 'Please pick time after year 1970';
+  }
   if (Validator.isEmpty(data.time)) {
     errors.time = 'This field is required';
   }
@@ -39,8 +44,14 @@ export function validateReport(data) {
   if (Validator.isEmpty(data.startDate)) {
     errors.startDate = 'This field is required';
   }
+  if (Date.parse(data.startDate) < 0) {
+    errors.startDate = 'Please select from year 1970 or greater';
+  }
   if (Validator.isEmpty(data.startTime)) {
     errors.startTime = 'This field is required';
+  }
+  if (Date.parse(data.startDate + ' ' + data.startTime) > Date.parse(data.endDate + ' ' + data.endTime)) { // eslint-disable-line prefer-template
+    errors.startDate = 'Start date/time must be before end date/time';
   }
   if (Validator.isEmpty(data.endDate)) {
     errors.endDate = 'This field is required';
@@ -48,10 +59,10 @@ export function validateReport(data) {
   if (Validator.isEmpty(data.endTime)) {
     errors.endTime = 'This field is required';
   }
-  return Promise.resolve({
+  return {
     errors,
     isValid: isEmpty(errors),
-  });
+  };
 }
 
 export function addExpense(response) {
@@ -75,10 +86,12 @@ export function updateExpense(expense) {
   };
 }
 
-export function expenseReport(response) {
+export function expenseReport(response, end, start) {
   return {
     type: types.EXPENSE_REPORT,
     response,
+    end,
+    start,
   };
 }
 
@@ -87,6 +100,25 @@ export function populateExpense(response) {
     type: types.EXPENSE_POPULATE,
     response,
   };
+}
+
+export function calculateReport(list, times) {
+  const { isValid, errors } = validateReport(times);
+  const owner = JSON.parse(localStorage.state).auth._id;
+  if (!isValid) {
+    return Promise.resolve({ errors });
+  }
+  const startTime = Date.parse(times.startDate + ' ' + times.startTime); // eslint-disable-line prefer-template
+  const endTime = Date.parse(times.endDate + ' ' + times.endTime); // eslint-disable-line prefer-template
+  const reportExpenses = [];
+  list.forEach((expense) => {
+    const parsedTime = Math.abs(Date.parse(expense.date + ' ' + expense.time)); // eslint-disable-line prefer-template
+    if (startTime <= parsedTime && endTime >= parsedTime && expense.owner === owner) {
+      reportExpenses.push(expense);
+    }
+  });
+  store.dispatch(expenseReport(reportExpenses, endTime, startTime));
+  return Promise.resolve({});
 }
 
 export function decorateExpense(data) {
@@ -117,7 +149,7 @@ export function submitExpense(data) {
     })
     .then(res => res.json())
     .then(res => dispatch(addExpense(res)))
-    .catch(e => console.log(e));
+    .catch(e => console.log(e)); // eslint-disable-line no-console
   };
 }
 
@@ -162,7 +194,7 @@ export function editExpense(data) {
 }
 
 export function getAllExpenses(userData) {
-  return (dispatch) => {
+  return (dispatch) => { // eslint-disable-line arrow-body-style
     return fetch('http://localhost:9000/api/expense/', { // eslint-disable-line no-undef
       method: 'GET',
       headers: {
@@ -175,6 +207,6 @@ export function getAllExpenses(userData) {
     })
     .then(res => res.json())
     .then(res => dispatch(populateExpense(res)))
-    .catch(e => console.log(e));
+    .catch(e => console.log(e)); // eslint-disable-line no-console
   };
 }
