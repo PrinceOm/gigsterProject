@@ -46,7 +46,6 @@ class App extends React.Component {
     if (selectedExpense.length < 1) {
       selectedExpense = JSON.parse(localStorage.state).expense.expenses;
     }
-    console.log('selected', selectedExpense)
     selectedExpense.forEach((expense) => {
       if (expense._id === e.target.name) {
         this.setState({ selectedId: expense });
@@ -90,8 +89,8 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  expenseActions: React.PropTypes.func.isRequired,
-  expense: React.PropTypes,
+  expenseActions: React.PropTypes.any, // eslint-disable-line react/forbid-prop-types
+  expense: React.PropTypes.any, // eslint-disable-line react/forbid-prop-types
 };
 
 const mapStateToProps = state => ({

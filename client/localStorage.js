@@ -26,6 +26,7 @@ export default function subscribe(store) {
     saveState({
       auth: store.getState().auth,
       expense: store.getState().expense,
+      user: store.getState().user,
     });
   }, 1000));
 }
