@@ -2,7 +2,7 @@ import isEmpty from 'lodash/isEmpty';
 import Validator from 'validator';
 import { types } from './';
 import store from '../../app';
-
+import { BASE_API_URL } from '../environment';
 
 export function validateInput(data) {
   const errors = {};
@@ -138,7 +138,7 @@ export function submitExpense(data) {
     }
     const token = JSON.parse(localStorage.state).auth.token;
     const expense = decorateExpense(data);
-    return fetch('http://localhost:9000/api/expense/', { // eslint-disable-line no-undef
+    return fetch(`${BASE_API_URL}/api/expense/`, { // eslint-disable-line no-undef
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -158,7 +158,7 @@ export function removeExpense(expenseId) {
   return (dispatch) => {
     const token = JSON.parse(localStorage.state).auth.token;
     const owner = JSON.parse(localStorage.state).auth._id;
-    return fetch(`http://localhost:9000/api/expense/${expenseId}`, { // eslint-disable-line no-undef
+    return fetch(`${BASE_API_URL}/api/expense/${expenseId}`, { // eslint-disable-line no-undef
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
@@ -176,7 +176,7 @@ export function editExpense(data) {
   return (dispatch) => {
     const expense = decorateExpense(data);
     const token = JSON.parse(localStorage.state).auth.token;
-    return fetch(`http://localhost:9000/api/expense/${expense._id}`, { // eslint-disable-line no-undef
+    return fetch(`${BASE_API_URL}/api/expense/${expense._id}`, { // eslint-disable-line no-undef
       method: 'PUT',
       headers: {
         Accept: 'application/json',
@@ -195,7 +195,7 @@ export function editExpense(data) {
 
 export function getAllExpenses(userData) {
   return (dispatch) => { // eslint-disable-line arrow-body-style
-    return fetch('http://localhost:9000/api/expense/', { // eslint-disable-line no-undef
+    return fetch(`${BASE_API_URL}/api/expense/`, { // eslint-disable-line no-undef
       method: 'GET',
       headers: {
         Accept: 'application/json',

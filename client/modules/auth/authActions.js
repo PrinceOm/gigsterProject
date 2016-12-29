@@ -4,6 +4,7 @@ import { replace } from 'react-router-redux';
 import { types } from './';
 import { setUser } from '../user/userActions';
 import { getAllExpenses } from '../expense/expenseActions';
+import { BASE_API_URL } from '../environment';
 
 export function validateInput(data) {
   const errors = {};
@@ -74,7 +75,7 @@ const authPost = function authRequest(uri, credentials) {
 
 export function authCheck(token) {
   return (dispatch) => {
-    fetch('http://localhost:9000/api/user/me', { // eslint-disable-line no-undef
+    fetch(`${BASE_API_URL}/api/user/me`, { // eslint-disable-line no-undef
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -116,7 +117,7 @@ export function signIn(credentials) {
     if (!isValid) {
       return Promise.resolve({ errors });
     }
-    return authPost('http://localhost:9000/api/auth/local', credentials)
+    return authPost(`${BASE_API_URL}/api/auth/local`, credentials)
       .then(handleAuthSuccess(dispatch))
       .catch((e) => {
         dispatch(authFailure(e));
@@ -131,7 +132,7 @@ export function userSignupRequest(credentials) {
     if (!isValid) {
       return Promise.resolve({ errors });
     }
-    return authPost('http://localhost:9000/api/user/', credentials)
+    return authPost(`${BASE_API_URL}/api/user/`, credentials)
       .then(handleAuthSuccess(dispatch))
       .catch((e) => {
         dispatch(authFailure(e));
