@@ -13,7 +13,7 @@ class ReportDisplay extends React.Component {
   render() {
     let totalAmount = 0;
     let display = 'no expenses';
-    if (this.props.expense.reportExpenses) {
+    if (this.props.expense.reportExpenses.length > 0) {
       display = this.props.expense.reportExpenses.map((expense) => {
         totalAmount += Number(expense.amount);
         return (<li key={expense._id} className="list-group-item disabled" >

@@ -2,7 +2,7 @@ import * as types from './constants';
 
 const initialState = {
   expenses: [],
-  reportExpenses: [null],
+  reportExpenses: [],
   end: '',
   start: '',
 };
