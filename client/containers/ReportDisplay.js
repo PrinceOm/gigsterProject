@@ -12,18 +12,21 @@ class ReportDisplay extends React.Component {
 
   render() {
     let totalAmount = 0;
-    const display = this.props.expense.reportExpenses.map((expense) => {
-      totalAmount += Number(expense.amount);
-      return (<li key={expense._id} className="list-group-item disabled" >
-        <p>Amount: {expense.amount}</p>
-        <p>Details: {expense.description}</p>
-        <p>Date: {expense.date}</p>
-        <p>Time: {expense.time}</p>
-        <a>Owned by: </a>
-        <a>{expense.username}</a>
-      </li>
-      );
-    });
+    let display = 'no expenses';
+    if (this.props.expense.reportExpenses) {
+      display = this.props.expense.reportExpenses.map((expense) => {
+        totalAmount += Number(expense.amount);
+        return (<li key={expense._id} className="list-group-item disabled" >
+          <p>Amount: {expense.amount}</p>
+          <p>Details: {expense.description}</p>
+          <p>Date: {expense.date}</p>
+          <p>Time: {expense.time}</p>
+          <a>Owned by: </a>
+          <a>{expense.username}</a>
+        </li>
+        );
+      });
+    }
     const totalDays = (this.props.expense.end - this.props.expense.start) / (3600000 * 24);
     const totalWeeks = totalDays / 7;
     const weekly = totalAmount / totalWeeks;
