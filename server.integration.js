@@ -1,5 +1,6 @@
 const request = require('supertest-as-promised');
 const db = require('./server/db');
+const app = require('express')();
 
 describe('Server', () => {
   before(db.connect);
@@ -7,8 +8,8 @@ describe('Server', () => {
 
   let server;
   beforeEach(() => {
-    const app = require('./server', { bustCache: true });
-    server = app.listen(app.get('port'), app.get('ip'));
+    app.set('env', 'test');
+    server = app.listen(3001, '0.0.0.0');
   });
   afterEach(done => server.close(done));
 
